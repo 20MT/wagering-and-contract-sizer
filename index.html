@@ -49,11 +49,13 @@
         <header class="mb-6 pb-4 border-b border-gray-200">
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">20-Minute Trader — Wagering & Position Sizer</h1>
             <div class="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
-                <h2 class="font-semibold mb-1">How to use this tool:</h2>
+                <h2 class="font-semibold mb-1">How to Use This Tool:</h2>
                 <ol class="list-decimal list-inside space-y-1">
-                    <li>Fill in your account, trade, and strategy details in the setup boxes below.</li>
-                    <li>The sizer calculates your **Next Trade Size ($)** and the corresponding **Number of Contracts**.</li>
-                    <li>After the trade, enter your P/L in the table to get your next trade's dollar risk.</li>
+                    <li><strong>Set Up Your Day:</strong> In the "Account Setup" and "Trade Setup" boxes, enter your daily account balance, loss limit, and the point range for your trades.</li>
+                    <li><strong>Configure Strategy:</strong> Adjust the "Ladder Logic" and "Sizing Parameters" to match your preferred trading style.</li>
+                    <li><strong>Get Position Size:</strong> The tool will instantly calculate your <strong>TP/SL Target ($)</strong> and the correct <strong>Number of Contracts</strong>.</li>
+                    <li><strong>Log Trades:</strong> After each trade, enter the final P/L in the "Actual Result ($)" column in the Trade Log below.</li>
+                    <li><strong>Reset for New Day:</strong> When you are finished, simply refresh the page to start a new session.</li>
                 </ol>
             </div>
         </header>
@@ -137,7 +139,7 @@
                 <p id="dailyLossLockout" class="text-2xl font-bold"></p>
             </div>
             <div class="bg-blue-600 text-white p-4 rounded-lg shadow-lg">
-                <p class="text-sm font-medium text-blue-200">NEXT TRADE SIZE ($)</p>
+                <p class="text-sm font-medium text-blue-200">TP/SL TARGET ($)</p>
                 <p id="nextTradeSize" class="text-2xl font-bold"></p>
             </div>
             <div class="bg-green-600 text-white p-4 rounded-lg shadow-lg">
