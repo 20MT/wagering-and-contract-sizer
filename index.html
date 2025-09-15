@@ -53,7 +53,7 @@
                 <ol class="list-decimal list-inside space-y-1">
                     <li><strong>Set Up Your Day:</strong> In the "Account Setup" and "Trade Setup" boxes, enter your daily account balance, loss limit, and the point range for your trades.</li>
                     <li><strong>Configure Strategy:</strong> Adjust the "Ladder Logic" and "Sizing Parameters" to match your preferred trading style.</li>
-                    <li><strong>Get Position Size:</strong> The tool will instantly calculate your <strong>TP/SL Target ($)</strong> and the correct <strong>Number of Contracts</strong>.</li>
+                    <li><strong>Get Position Size:</strong> The tool will instantly calculate your <strong>TP/SL Settings ($)</strong> and the correct <strong>Number of Contracts</strong>.</li>
                     <li><strong>Log Trades:</strong> After each trade, enter the final P/L in the "Actual Result ($)" column in the Trade Log below.</li>
                     <li><strong>Reset for New Day:</strong> When you are finished, simply refresh the page to start a new session.</li>
                 </ol>
@@ -122,28 +122,29 @@
                         <label for="roundDown" class="block text-sm font-medium text-gray-700">Round down to nearest $</label>
                         <input type="number" id="roundDown" value="5" step="1" class="mt-1">
                     </div>
-                    <div class="text-sm text-gray-500 pt-2">
-                        <p>Fee is automatically calculated at $0.74 per contract.</p>
+                    <div>
+                        <label for="feePerContract" class="block text-sm font-medium text-gray-700">Fee per Contract ($)</label>
+                        <input type="number" id="feePerContract" value="0.74" step="0.01" class="mt-1">
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-4 rounded-lg border-2">
-                <p class="text-sm font-medium text-gray-500">Full Stack ($)</p>
+            <div class="bg-emerald-600 text-white p-4 rounded-lg shadow-lg">
+                <p class="text-sm font-medium text-emerald-200">Full Stack ($)</p>
                 <p id="fullStack" class="text-2xl font-bold"></p>
             </div>
-            <div class="bg-white p-4 rounded-lg border-2">
-                <p class="text-sm font-medium text-gray-500">Daily Loss Lockout ($)</p>
+            <div class="bg-amber-500 text-white p-4 rounded-lg shadow-lg">
+                <p class="text-sm font-medium text-amber-100">Daily Loss Lockout ($)</p>
                 <p id="dailyLossLockout" class="text-2xl font-bold"></p>
             </div>
             <div class="bg-blue-600 text-white p-4 rounded-lg shadow-lg">
-                <p class="text-sm font-medium text-blue-200">TP/SL TARGET ($)</p>
+                <p class="text-sm font-medium text-blue-200">TP/SL SETTINGS ($)</p>
                 <p id="nextTradeSize" class="text-2xl font-bold"></p>
             </div>
-            <div class="bg-green-600 text-white p-4 rounded-lg shadow-lg">
-                <p class="text-sm font-medium text-green-200">NUMBER OF CONTRACTS</p>
+            <div class="bg-violet-600 text-white p-4 rounded-lg shadow-lg">
+                <p class="text-sm font-medium text-violet-200">NUMBER OF CONTRACTS</p>
                 <p id="numContracts" class="text-2xl font-bold">0</p>
             </div>
         </div>
@@ -158,7 +159,7 @@
                             <th class="table-cell header-cell w-16">Trade #</th>
                             <th class="table-cell header-cell">Recommended TP/SL ($)</th>
                             <th class="table-cell header-cell bg-blue-100">Actual Result ($)</th>
-                            <th class="table-cell header-cell">Running P&L ($)</th>
+                            <th class="table-cell header-cell">Realized P&L ($)</th>
                             <th class="table-cell header-cell">Lockout</th>
                         </tr>
                     </thead>
@@ -210,6 +211,7 @@
             const autoLadder = getBoolValue('autoLadder');
             const minProfitToKeep = getFloatValue('minProfitToKeep');
             const lockInPercent = getFloatValue('lockInPercent');
+            const feePerContract = getFloatValue('feePerContract');
 
             // Initial calculations
             const fullStack = currentBalance - maxLossLimit;
@@ -252,7 +254,7 @@
                     if (riskPerContract > 0) {
                         numContractsForFee = Math.floor(rawRisk / riskPerContract);
                     }
-                    const totalFee = numContractsForFee * 0.74;
+                    const totalFee = numContractsForFee * feePerContract;
 
                     const finalRisk = rawRisk - totalFee;
                     recommendedTpsl = Math.floor(Math.max(0, finalRisk) / roundDown) * roundDown;
@@ -317,7 +319,7 @@
                    if (riskPerContract > 0) {
                        numContractsForFee = Math.floor(rawRisk / riskPerContract);
                    }
-                   const totalFee = numContractsForFee * 0.74;
+                   const totalFee = numContractsForFee * feePerContract;
 
                    const finalRisk = rawRisk - totalFee;
                    const finalTradeSize = Math.floor(Math.max(0, finalRisk) / roundDown) * roundDown;
@@ -357,4 +359,3 @@
     </script>
 </body>
 </html>
-
