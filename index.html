@@ -219,6 +219,12 @@
             
             document.getElementById('fullStack').textContent = fullStack.toFixed(2);
             document.getElementById('dailyLossLockout').textContent = `-${dailyLossLockout.toFixed(2)}`;
+            
+            // BUG FIX: Reset all rows before recalculating to handle corrections
+            for (let j = 1; j <= NUM_TRADES; j++) {
+                document.getElementById(`trade-row-${j}`).classList.remove('disabled-row');
+                document.getElementById(`result-${j}`).disabled = false;
+            }
 
             let runningPL = 0;
             let isLockedOut = false;
