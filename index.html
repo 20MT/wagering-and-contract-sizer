@@ -145,9 +145,17 @@
         </div>
 
         <div class="mt-8 pt-6 border-t">
-             <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Trade Log</h2>
+             <div class="flex justify-between items-center mb-4">
+                 <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Trade Log</h2>
+                 <button 
+                     id="downloadCsvButton"
+                     onclick="exportTableToCSV()" 
+                     class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out text-sm">
+                     Download Results (CSV)
+                 </button>
+             </div>
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 border">
+                <table class="min-w-full divide-y divide-gray-200 border" id="tradeLogTable">
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="table-cell header-cell w-16">Trade #</th>
@@ -338,6 +346,67 @@
             
             calculateContracts();
         }
+
+
+        // --- NEW FUNCTION TO EXPORT TABLE TO CSV ---
+        function exportTableToCSV() {
+            const table = document.getElementById('tradeLogTable');
+            const rows = table.querySelectorAll('tr');
+            let csv = [];
+
+            // Loop through all rows (including header)
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cols = row.querySelectorAll('td, th');
+                let rowData = [];
+
+                // Loop through all columns in the row
+                for (let j = 0; j < cols.length; j++) {
+                    const col = cols[j];
+                    let text = '';
+                    
+                    // Special handling for the Actual Result input field
+                    if (i > 0 && j === 2) { 
+                        // Target the input field in the 'Actual Result ($)' column (j=2)
+                        const input = col.querySelector('input');
+                        text = input ? input.value : '';
+                    } else {
+                        // Use innerText for all other cells (including headers)
+                        text = col.innerText.trim();
+                    }
+
+                    // Clean and escape text for CSV
+                    text = text.replace(/"/g, '""'); // Escape double quotes
+                    if (text.includes(',') || text.includes('\n') || text.includes('"')) {
+                        text = `"${text}"`; // Enclose if it contains delimiter, newline, or quotes
+                    }
+                    rowData.push(text);
+                }
+                csv.push(rowData.join(','));
+            }
+
+            const csvString = csv.join('\n');
+            const filename = `TradingLog_${new Date().toLocaleDateString('en-CA')}.csv`;
+            
+            // Create a Blob and a temporary link to trigger the download
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            if (link.download !== undefined) { 
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url); // Clean up
+            } else {
+                // Fallback for older browsers
+                alert("Your browser does not support automatic downloads. Please copy the data manually.");
+            }
+        }
+        // --- END NEW FUNCTION ---
 
         function createTradeRows() {
             const tbody = document.getElementById('trade-rows');
